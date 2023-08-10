@@ -15,7 +15,7 @@ $password = "";
 $Db_name  = "EcommerceWebsite";
 $mysqli = new mysqli;
 $conn = $mysqli->connect($servername, $username, $password, $Db_name);
-$userid = $_SESSION["id"] ;
+$userid = $_SESSION["USER_ID"] ;
 
 
 if(isset($_POST["name"])) {
@@ -28,8 +28,8 @@ $query  = $mysqli->query(" UPDATE users SET name='$name'    WHERE  id = '$userid
 ") ; 
 
 if($query) {
-    $_SESSION["nameuser"]= $name ;
     
+    $_SESSION["nameuser"]= $name ;
     $res= [
         'status'=> 200,
         'message' => "Your name updated succesfully !"

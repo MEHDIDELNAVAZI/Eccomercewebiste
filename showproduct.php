@@ -13,7 +13,7 @@ $p_id = $_GET["p_id"];
 
 $query6  = $mysqli->query("SELECT * FROM comment WHERE p_id='$p_id'");
 $numberof_comment  = mysqli_num_rows($query6);
-$user_id = $_SESSION["id"];
+$user_id = $_SESSION["USER_ID"];
 
 $querycheak = $mysqli->query("SELECT * FROM  recentcheak WHERE userid='$user_id' AND productid='$p_id'");
 if (mysqli_num_rows($querycheak) == 0  && isset($p_id)  && isset($user_id)) {
@@ -569,7 +569,7 @@ if (isset($p_id)) {
                 ?>
                 <div class="pictures" style="position: relative;" id="pic">
                     <?php  
-                    $query = $mysqli->query("SELECT * FROM favorite WHERE user_id='$_SESSION[id]' AND p_id='$p_id'");
+                    $query = $mysqli->query("SELECT * FROM favorite WHERE user_id='$_SESSION[USER_ID]' AND p_id='$p_id'");
                     if(mysqli_num_rows($query) > 0) {
                     ?>
                     <i class='bx bxs-heart' style="font-size:20px;color:red;position:relative">
@@ -746,7 +746,7 @@ if (isset($p_id)) {
                                     ?>
                                 </div>
                                 <div class="button_for_cart" id="button_for_cart">
-                                    <?php if (isset($_SESSION['id'])) { ?>
+                                    <?php if (isset($_SESSION['USER_ID'])) { ?>
                                         <?php
                                         $query = $mysqli->query("SELECT * FROM cart WHERE user_id='$user_id' AND p_id='$p_id'");
                                         if (mysqli_num_rows($query)  == 1) {
@@ -808,7 +808,7 @@ if (isset($p_id)) {
         <div id="page4" class="page">
             <h2 style="color:red">Comments </h2>
             <hr>
-            <?php if (isset($_SESSION["id"])) {
+            <?php if (isset($_SESSION['USER_ID'])) {
             ?>
                 <?php
                 $query  = $mysqli->query("SELECT * FROM comment WHERE p_id='$p_id'");
@@ -1348,7 +1348,7 @@ if (isset($p_id)) {
                 }
 
                 var p_id = <?php echo $p_id ?>;
-                var user_id = <?php echo $_SESSION["id"]; ?>;
+                var user_id = <?php echo $_SESSION['USER_ID']; ?>;
                 const date = new Date();
                 const year = date.getFullYear();
                 const month = date.getMonth() + 1;
@@ -1600,10 +1600,11 @@ if (isset($p_id)) {
 
     <script>
         $('#pic').on('click', '.bx-heart', function() {
+            console.log("clicked");
             $(this).removeClass("bx-heart");
             $(this).addClass("bxs-heart");
             var p_id = <?php echo $p_id ?>;
-            var user_id = <?php echo $_SESSION['id']; ?>;
+            var user_id = <?php echo $_SESSION['USER_ID']; ?>;
 
             $.ajax({
                 url: 'add_delet_favorite.php?add_fav=true',
@@ -1625,12 +1626,12 @@ if (isset($p_id)) {
             });
 
         })
-
+        
         $('#pic').on('click', '.bxs-heart', function() {
             $(this).removeClass("bxs-heart");
             $(this).addClass("bx-heart");
             var p_id = <?php echo $p_id ?>;
-            var user_id = <?php echo $_SESSION['id']; ?>;
+            var user_id = <?php echo $_SESSION['USER_ID']; ?>;
             $.ajax({
                 url: 'add_delet_favorite.php?delete_fav=true',
                 type: 'post',

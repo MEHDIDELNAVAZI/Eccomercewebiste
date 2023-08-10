@@ -11,6 +11,8 @@ include "./config_database.php";
     <link rel="stylesheet" href="./bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <title>Confirm Order</title>
     <style>
+
+
         .top_row {
             width: 100%;
             height: 150px;
@@ -140,7 +142,7 @@ include "./config_database.php";
         </div>
 
         <?php
-        $query = $mysqli->query("SELECT * FROM cart WHERE  user_id='$_SESSION[id]'");
+        $query = $mysqli->query("SELECT * FROM cart WHERE  user_id='$_SESSION[USER_ID]'");
         if (mysqli_num_rows($query) > 0) {
         ?>
 

@@ -21,14 +21,12 @@ $Db_name  = "EcommerceWebsite";
 $mysqli = new mysqli;
 $conn = $mysqli->connect($servername, $username, $password, $Db_name);
 
-$user_id = $_SESSION["id"];
+$user_id = $_SESSION["USER_ID"];
 $login = false;
+
 if (
-    isset($_SESSION['nameuser']) &&
-    isset($_SESSION['emailuser']) &&
-    isset($_SESSION['passworduser']) &&
-    isset($_SESSION['verifyemail']) &&
-    $_SESSION['verifyemail'] == "verified"
+    isset($_SESSION['USER_ID']) &&
+    isset($_SESSION['SESSION_EMAIL'])
 ) {
     $login = true;
 } else {

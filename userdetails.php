@@ -2,16 +2,10 @@
 include  "./config_database.php";
 session_start();
 if (
-    isset($_SESSION['nameuser']) &&
-    isset($_SESSION['emailuser']) &&
-    isset($_SESSION['passworduser']) &&
-    isset($_SESSION['verifyemail']) &&
-    $_SESSION['verifyemail'] == "verified"
+    isset($_SESSION['USER_ID']) &&
+  isset( $_SESSION['SESSION_EMAIL'])
 ) {
     include "./header.php";
-
-
-
 ?>
 
     <html lang="en">
@@ -350,7 +344,7 @@ if (
                         <form id="editname" method="post">
                             <input name="name" type="text" placeholder="Update name" value="<?php
                                                                                             $query  = $mysqli->query("SELECT * FROM users WHERE 
-                                        id= '$_SESSION[id]'");
+                                        id= '$_SESSION[USER_ID]'");
                                                                                             while ($row = mysqli_fetch_assoc($query)) {
                                                                                                 echo $row["name"];
                                                                                             }
@@ -413,7 +407,7 @@ if (
                         <form id="editnumberform" method="post">
                             <input name="editnumber" type="text" value="<?php
                                                                         $query  = $mysqli->query("SELECT * FROM phones 
-                             WHERE userid = '$_SESSION[id]'
+                             WHERE userid = '$_SESSION[USER_ID]'
                              ");
                                                                         while ($row = mysqli_fetch_assoc($query)) {
                                                                             $number  = $row["phonenumber"];
@@ -518,7 +512,7 @@ if (
                         <form id="editcodeform" method="post">
                             <input name="newcode" type="text" value=<?php
                                                                     $queryy  = $mysqli->query("SELECT * FROM identifynumber 
-                             WHERE userid = '$_SESSION[id]'
+                             WHERE userid = '$_SESSION[USER_ID]'
                              ");
                                                                     while ($row = mysqli_fetch_assoc($queryy)) {
                                                                         $code  = $row["identifynumber"];
@@ -626,7 +620,7 @@ if (
                         <form id="editemailform" method="post">
                             <input name="name" type="text" placeholder="Update email" value="<?php
                                                                                                 $query  = $mysqli->query("SELECT * FROM users WHERE 
-                                        id= '$_SESSION[id]'");
+                                        id= '$_SESSION[USER_ID]'");
                                                                                                 while ($row = mysqli_fetch_assoc($query)) {
                                                                                                     echo $row["email"];
                                                                                                 }
@@ -716,7 +710,7 @@ if (
                         <span style="font-size: 30px;">
                             <?php
                             $query  = $mysqli->query("SELECT * FROM users WHERE 
-                                        id= '$_SESSION[id]'");
+                                        id= '$_SESSION[USER_ID]'");
                             while ($row = mysqli_fetch_assoc($query)) {
                                 echo $row["name"];
                             }
@@ -748,7 +742,7 @@ if (
                                     <span style="font-size: 17px;">
                                         <?php
                                         $query  = $mysqli->query("SELECT * FROM users WHERE 
-                                        id= '$_SESSION[id]'");
+                                        id= '$_SESSION[USER_ID]'");
                                         while ($row = mysqli_fetch_assoc($query)) {
                                             echo $row["name"];
                                         }
@@ -762,7 +756,7 @@ if (
                                     <span style="color: red;">Number : </span>
                                     <?php
                                     $queryearchfornumber  = $mysqli->query("SELECT * From  phones WHERE 
-                                    userid = '$_SESSION[id]'  
+                                    userid = '$_SESSION[USER_ID]'  
                                 ");
                                     if ($queryearchfornumber->num_rows  === 1) {
                                         while ($row = mysqli_fetch_assoc($queryearchfornumber)) {
@@ -803,7 +797,7 @@ if (
                                 </div>
                                 <div class="col mt-3"> <span style="color: red;"> Identity number : </span>
                                     <?php
-                                    $userid = $_SESSION["id"];
+                                    $userid = $_SESSION["USER_ID"];
                                     $querysearch = $mysqli->query("SELECT * FROM identifynumber WHERE 
                                   userid =  '$userid'  
                                   ");
@@ -833,7 +827,7 @@ if (
                                 <div class="w-100"></div>
                                 <div class="col  mt-3 pb-3"> <span style="color: red;"> Birthday : </span>
                                     <?php
-                                    $userid = $_SESSION["id"];
+                                    $userid = $_SESSION["USER_ID"];
                                     $querysearch = $mysqli->query("SELECT * FROM birthday WHERE 
                                    userid =  '$userid'  
                                   ");
@@ -863,7 +857,7 @@ if (
                                 <div class="col mt-3  pb-3"> <span style="color: red;"> Email : </span>
                                     <?php
                                     $query  = $mysqli->query("SELECT * From  users WHERE 
-                                       id  = '$_SESSION[id]'  ");
+                                       id  = '$_SESSION[USER_ID]'  ");
                                     while ($row = mysqli_fetch_assoc($query)) {
                                         $email  = $row["email"];
                                     };
@@ -901,7 +895,7 @@ if (
                             <div class="addreses">
                                 <?php
                                 $counter = 1;
-                                $query = $mysqli->query("SELECT *  FROM addresses WHERE  user_id='$_SESSION[id]'");
+                                $query = $mysqli->query("SELECT *  FROM addresses WHERE  user_id='$_SESSION[USER_ID]'");
                                 if (mysqli_num_rows($query) > 0) {
                                     while ($row3 = mysqli_fetch_assoc($query)) {
                                         echo  " <h4 style='padding:5px;margin-top:10px'>Address " . $counter  . "</h4>";
@@ -941,7 +935,7 @@ if (
                                 <div class="comments  row" id="comments">
                                     <?php
 
-                                    $query = $mysqli->query("SELECT * FROM comment WHERE user_id='$_SESSION[id]' ");
+                                    $query = $mysqli->query("SELECT * FROM comment WHERE user_id='$_SESSION[USER_ID]' ");
                                     if (mysqli_num_rows($query) > 0) {
 
                                         while ($row = mysqli_fetch_assoc($query)) {
@@ -1000,7 +994,7 @@ if (
                                 <div class="rec_watched  row" id="rec_watched">
                                     <?php
 
-                                    $query = $mysqli->query("SELECT * FROM  recentcheak   WHERE userid='$_SESSION[id]' limit 5 ");
+                                    $query = $mysqli->query("SELECT * FROM  recentcheak   WHERE userid='$_SESSION[USER_ID]' limit 5 ");
                                     if (mysqli_num_rows($query) > 0) {
                                         while ($row = mysqli_fetch_assoc($query)) {
                                             $p_id = $row["productid"];
@@ -1056,7 +1050,7 @@ if (
                                     <br>
                                     <?php
 
-                                    $query = $mysqli->query("SELECT * FROM  favorite   WHERE user_id='$_SESSION[id]' ");
+                                    $query = $mysqli->query("SELECT * FROM  favorite   WHERE user_id='$_SESSION[USER_ID]' ");
                                     if (mysqli_num_rows($query) > 0) {
                                         while ($row = mysqli_fetch_assoc($query)) {
                                             $p_id = $row["p_id"];
@@ -1118,7 +1112,7 @@ if (
                                         </div>
                                         <div class="div1 " style="display:block">
                                             <?php
-                                            $query = $mysqli->query("SELECT * FROM orders WHERE user_id='$_SESSION[id]' AND status='Pending' ");
+                                            $query = $mysqli->query("SELECT * FROM orders WHERE user_id='$_SESSION[USER_ID]' AND status='Pending' ");
                                             if (mysqli_num_rows($query) > 0) {
                                                 while ($row = mysqli_fetch_assoc($query)) {
                                                     $order_id = $row["order_id"];
@@ -1157,7 +1151,7 @@ if (
                                     </div>
                                     <div class="div2" style="display:none">
                                     <?php
-                                            $query = $mysqli->query("SELECT * FROM orders WHERE user_id='$_SESSION[id]' AND status='Completed' ");
+                                            $query = $mysqli->query("SELECT * FROM orders WHERE user_id='$_SESSION[USER_ID]' AND status='Completed' ");
                                             if (mysqli_num_rows($query) > 0) {
                                                 while ($row = mysqli_fetch_assoc($query)) {
                                                     $order_id = $row["order_id"];

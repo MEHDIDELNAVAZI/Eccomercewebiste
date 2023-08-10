@@ -7,6 +7,7 @@ if ( $_SERVER['REQUEST_METHOD']=='GET' && realpath(__FILE__) == realpath( $_SERV
     
 include "../config_database.php" ;
 if (isset($_GET["edit"])) {
+   
     
 if 
 (isset($_POST["tcat_id"]) && $_POST["tcat_show"]  && isset($_POST["tcat_name"]))  {

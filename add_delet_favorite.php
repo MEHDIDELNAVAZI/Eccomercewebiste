@@ -17,9 +17,9 @@ if (isset($_GET["delete_fav"])) {
         ];
         echo json_encode($res);
         return false;
-        
-    
     }
+
+    
     
 } else if (isset($_GET["add_fav"])) {
   $user_id  =$_POST['user_id'] ;

@@ -1,281 +1,164 @@
-
+<!-- Code by Brave Coder - https://youtube.com/BraveCoder -->
 <?php
-session_start() ;
-if(isset($_SESSION["verifyemail"])) {
-    if($_SESSION["verifyemail"] == "verified") {
-        header("location:http://shop.test") ;
+
+
+
+include './config_database.php';
+$msg = "";
+
+
+if (isset($_GET['verification'])) {
+  if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM users WHERE code='{$_GET['verification']}'")) > 0) {
+    $query = mysqli_query($conn, "UPDATE users SET code='' WHERE code='{$_GET['verification']}'");
+
+    if ($query) {
+      $msg = "<div class='alert alert-success'>Account verification has been successfully completed.</div>";
     }
+  } else {
+    header("Location:http://shop.test/register.php");
+  }
 }
 
-else {
+
+if (isset($_GET['verification'])) {
+  if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM users WHERE code='{$_GET['verification']}'")) > 0) {
+    $query = mysqli_query($conn, "UPDATE users SET code='' WHERE code='{$_GET['verification']}'");
+
+    if ($query) {
+      $msg = "<div class='alert alert-success'>Account verification has been successfully completed.</div>";
+    }
+  } else {
+    header("Location:http://shop.test/register.php");
+  }
+}
+
+
+if (isset($_POST['submit'])) {
+
+  if (isset($_POST['g-recaptcha-response'])) {
+    $recaptcha_response = $_POST['g-recaptcha-response'];
+    $secret_key = '6LenRpUnAAAAAL0fa6vCCbLkrmSRAUYprmNmC1Hp';
+    $url = 'https://www.google.com/recaptcha/api/siteverify';
+
+    $data = array(
+      'secret' => $secret_key,
+      'response' => $recaptcha_response
+    );
+
+    $options = array(
+      'http' => array(
+        'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+        'method' => 'POST',
+        'content' => http_build_query($data)
+      )
+    );
+
+    $context = stream_context_create($options);
+    $result = file_get_contents($url, false, $context);
+    $response = json_decode($result,true);
+
+
+    if ($response['success']) {
+
+      $email = mysqli_real_escape_string($conn, $_POST['email']);
+      $password = mysqli_real_escape_string($conn, md5($_POST['password']));
+
+      $sql = "SELECT * FROM users WHERE email='{$email}' AND password='{$password}'";
+      $result = mysqli_query($conn, $sql);
+
+      if (mysqli_num_rows($result) === 1) {
+        $row = mysqli_fetch_assoc($result);
+
+        if (empty($row['code'])) {
+          $_SESSION['SESSION_EMAIL'] = $email;
+          $_SESSION['USER_ID'] = $row["id"];
+        
+          header("Location:http://shop.test");
+        } else {
+          $msg = "<div class='alert alert-info'>First verify your account and try again.</div>";
+        }
+      } else {
+        $msg = "<div class='alert alert-danger'>Email or password do not match.</div>";
+      }
+    } else {
+      $msg = "<div class='alert alert-danger'> Captcha fialed ! </div>";
+    }
+  } else {
+    $msg = "<div class='alert alert-danger'> Captcha failed ! </div>";
+  }
+}
 
 ?>
-
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zxx">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./bootstrap-4.3.1-dist/css/bootstrap.min.css">
-    <title>Log in page for user </title>
-    <style>
-        body {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(#FFCCFF, #CCFFFF)
-        }
 
-        .login-box {
-            width: 500px;
-            height: 400px;
-            color: black;
-            font-size: 20px;
-            border-radius: 10px;
-            border: solid black 1px;
-            box-shadow: 1px 1px 1px 1px gray;
-            position: absolute;
-            background-color: white;
-            text-align: center;
-            margin: auto;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
+  <!-- Meta tag Keywords -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="./assets/css/style.css">
 
-        .login-box input[type="text"],
-        input[type="password"] {
-            width: 70%;
-            height: 20px;
-            height: 30px;
-            font-size: 15px;
-            padding: 10px;
-            border: none;
-            border-bottom: solid black 2px;
-            position: relative;
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-        }
+  <!-- //Meta tag Keywords -->
 
-        .login-box input[type="submit"] {
-            width: 40%;
-            height: 40px;
-            line-height: 30px;
-            background-color: aquamarine;
-            border-radius: 10px;
-        }
+  <link href="//fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/assets/css/style.css">
+  <script src="https://kit.fontawesome.com/af562a2a63.js" crossorigin="anonymous"></script>
 
-        .login-box input[type="text"],
-        input[type="password"] {
-            margin-top: 20px;
-            outline: none;
-            position: relative;
-        }
-
-        .title {
-            font-size: 30px;
-        }
-
-        .txtfield {
-            width: 500px;
-            text-align: center;
-        }
-
-        a {
-            font-size: 14px;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: none;
-        }
-
-        .email-validation-error {
-            display: block;
-            color: red;
-            font-size: 15px;
-            text-align: left;
-            margin-left: 85px;
-            margin-top: 5px;
-        }
-
-        
-        
-        label {
-            position: absolute;
-            left: 400px;
-        }
-        .input-container {
-            position: relative;
-        }
-        .input-container img {
-            position: absolute;
-            right: 60px;
-            top: 20px;
-            cursor: pointer;
-        }
-
-
-
-        @media (max-width: 641px) {
-            .login-box {
-                width: 400px;
-            }
-            .txtfield {
-               width: 400px !important;
-            }
-        }
-        @media (max-width: 420px) {
-            .login-box {
-                width: 320px;
-            }
-            .txtfield {
-                width: 320px !important;
-            }
-            .email-validation-error {
-                margin-left: 40px;
-            }
-        }
-    </style>
 </head>
 
 <body>
 
-    <div class="login-box">
+  <!-- form section start -->
+  <section class="w3l-mockup-form">
+    <div class="container">
+      <!-- /form -->
+      <div class="workinghny-form-grid">
+        <div class="main-mockup">
 
-        <div class="center">
-            <div class="title">Login</div>
-            <hr>
-            <form action="login-cheaking.php" method="post">
-                <div class="txtfield">
-                    <input class="email" type="text" placeholder="Enter you email " name="email" required>
-                    <span class="email-validation-error"></span>
-                    <div class="input-container">
-                        <input class="password" type="password" placeholder="Enter your password " name="password" required>
-                        <img src="./icons/icons8-hide-30.png" alt="hide eyes for  password" width="20" height="20">
+          <div class="w3l_form align-self">
+            <div class="left_grid_info">
+            </div>
+          </div>
 
-                    </div>
-                    
-                    <p class="forgot-password" style="text-align: left;margin-left:85px;margin-top:20px"> <a href="forgotpassword.php">Forgot Password ?</a></p>
-                    <input type="submit" value="Login">
-                    <p class="registerpage">
-                        <span style="color:gray;font-size : 16px"> Not a member ?</span>
-                        <a href="./register.php">Register now </a>
-                    </p>
-                </div>
+          <div class="content-wthree">
+            <h2>Login Now</h2>
+            <?php echo $msg; ?>
+            <form method="post">
+              <input type="email" class="email" name="email" placeholder="Enter Your Email" required>
+              <input type="password" class="password" name="password" placeholder="Enter Your Password" style="margin-bottom: 2px;" required>
+              <br>
+              <br>
+              <p><a href="http://shop.test/forgotpassword.php" style="margin-bottom: 15px; display: block; text-align: right;">Forgot Password?</a></p>
+              <br>
+              <div class="g-recaptcha" data-sitekey="6LenRpUnAAAAAE4iI0dXrVtVTfwagIJ4wp8gFaig"></div>
+              <br>
+              <button name="submit" name="submit" class="btn" type="submit">Login</button>
             </form>
-
-
-
+            <div class="social-icons">
+              <p>Create Account! <a href="http://shop.test/register.php">Register</a>.</p>
+            </div>
+          </div>
         </div>
+      </div>
+      <!-- //form -->
     </div>
+  </section>
+  <!-- //form section start -->
 
+  <script src="js/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(c) {
+      $('.alert-close').on('click', function(c) {
+        $('.main-mockup').fadeOut('slow', function(c) {
+          $('.main-mockup').remove();
+        });
+      });
+    });
+  </script>
 
-    <script src="./bootstrap-4.3.1-dist/jquery-3.6.1.min.js"></script>
-    <script>
-        //chek for password strengh  in this function 
-        function checkPasswordStrength(password) {
-            // Initialize variables
-            var strength = 0;
-            var tips = "";
-
-            // Check password length
-            if (password.length < 8) {
-                tips += "Make the password longer. ";
-            } else {
-                strength += 1;
-            }
-
-            // Check for mixed case
-            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
-                strength += 1;
-            } else {
-                tips += "Use both lowercase and uppercase letters. ";
-            }
-
-            // Check for numbers
-            if (password.match(/\d/)) {
-                strength += 1;
-            } else {
-                tips += "Include at least one number. ";
-            }
-
-            // Check for special characters
-            if (password.match(/[^a-zA-Z\d]/)) {
-                strength += 1;
-            } else {
-                tips += "Include at least one special character. ";
-            }
-
-            // Return results
-            return strength
-        }
-        //end of the password strengh function
-
-        var emialinput = $(".email")
-        var passwordpower = $(".fillpower")
-        var password = $(".password")
-        emialinput.keydown(function() {
-
-            var emialvalidation = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-][a-zA-Z0-9-]+$/;
-
-            if (emialinput.val().match(emialvalidation)) {
-                document.querySelector(".email-validation-error").innerHTML = '<img src="./icons/icons8-checkmark-48.png" alt="cheak icon" width="20" height="20">'
-            } else {
-                document.querySelector(".email-validation-error").innerHTML = "Format of the email is not Correct !"
-            }
-        })
-
-        password.focus(function() {
-            $(".password-power ").css("display", "block")
-        })
-        password.keydown(function() {
-            if (password.val() == "") {
-                $(".fillpower").css("width", "0")
-            }
-
-            if (checkPasswordStrength(password.val()) < 2) {
-                console.log("password is realy weak  ")
-                $(".fillpower").css("width", "20%")
-                $(".fillpower").css("background-color", "#FF6666")
-            } else if (checkPasswordStrength(password.val()) === 2) {
-                console.log("Medium difficulty ")
-                $(".fillpower").css("width", "40%")
-                $(".fillpower").css("background-color", "#FF9933")
-            } else if (checkPasswordStrength(password.val()) === 3) {
-                console.log(" difficalut ")
-                $(".fillpower").css("width", "60%")
-                $(".fillpower").css("background-color", "#99FF99")
-            } else {
-                console.log(" very  difficalut ")
-                $(".fillpower").css("width", "100%")
-                $(".fillpower").css("background-color", "#00FF00")
-            }
-        })
-
-
-        //hide eye for  password  
-        var hide = $(".input-container img ");
-        var hidebool = true;
-        hide.click(function() {
-            if (hidebool) {
-                hidebool = false;
-                $(".input-container img ").attr("src", "./icons/icons8-eye-30 (1).png")
-                $(".password").attr("type", "text")
-            } else {
-                hidebool = true;
-                $(".input-container img ").attr("src", "./icons/icons8-hide-30.png")
-                $(".password").attr("type", "password")
-            }
-        })
-    </script>
 </body>
 
 </html>
-
-
-
-<?php
-}
-?>

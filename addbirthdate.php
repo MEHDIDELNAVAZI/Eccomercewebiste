@@ -16,7 +16,7 @@ $password = "";
 $Db_name  = "EcommerceWebsite";
 $mysqli = new mysqli;
 $conn = $mysqli->connect($servername, $username, $password, $Db_name);
-$userid = $_SESSION["id"];
+$userid = $_SESSION["USER_ID"];
 
 
 if (isset($_POST["date"])) {
