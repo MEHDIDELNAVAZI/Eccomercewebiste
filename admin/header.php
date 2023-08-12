@@ -130,7 +130,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && realpath(__FILE__) == realpath($_SERV
 
         <ul>
             <li class="d"> <i class='bx bxs-dashboard'></i><span class="data"> Dashboard </span> </li>
-            <li class="d"> <i class='bx bxs-cog'></i> <span class="data">Website Setting</span> </li>
             <li style="position: relative;">
                 <i class='bx bx-outline'></i> Shopp Setting
                 <ul>
@@ -149,13 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && realpath(__FILE__) == realpath($_SERV
 
 
             <li class="d"> <i class='bx bxl-product-hunt'></i> <span class="data">Product Managment</span></li>
-            <li class="d"><i class='bx bx-border-all'></i> <span class="data">Order Managment</span></li>
             <li class="d"> <i class='bx bx-slider'></i> <span class="data">Manage Sliders</span></li>
             <li class="d"> <i class='bx bx-server'></i> <span class="data">Services</span></li>
             <li class="d"> <i class='bx bx-question-mark'></i> <span class="data">FaQ</span></li>
-            <li class="d"><i class='bx bx-cog'></i><span class="data">Page Settings</span></li>
             <li class="d"><i class='bx bxl-vk'></i><span class="data"> Social Media</span></li>
-            <li class="d"> <i class='bx bxs-captions'></i><span class="data">Subscribers</span> </li>
         </ul>
 
 

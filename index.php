@@ -227,17 +227,64 @@ include "./header.php";
             margin-top: 140px;
         }
 
+        .pr_name_find{
+        text-align: center;
+        }
+
+        .pborder{
+        border: solid 1px gray;
+        }
+     
+
         
     </style>
 </head>
 
 <body>
+    <br>
     <?php
-    if (isset($_GET["tcat_id"]) ||  isset($_GET["mcat_id"]) || isset($_GET["ecat_id"])) {
+    if (isset($_GET["tcat_id"]) ||  isset($_GET["mid_category"]) || isset($_GET["ecat_id"])) {
     ?>
-        <div class="products_by_menue">
-            <h1>pr</h1>
+        <div class="products_by_menue container">
+        <div class="row">
+        <?php  
+        if ($_GET['tcat_id']) {
+        $query_index = $mysqli->query("SELECT * FROM tbl_product WHERE  tcat_id = $_GET[tcat_id]");
+        }
+
+        if ($_GET['mid_category']) {
+            $query_index = $mysqli->query("SELECT * FROM tbl_product WHERE  mcat_id = $_GET[mid_category]");
+        }
+
+        if ($_GET['ecat_id']) {
+            $query_index = $mysqli->query("SELECT * FROM tbl_product WHERE  ecat_id = $_GET[ecat_id]");
+        }        
+       if (mysqli_num_rows($query_index) > 0)  {
+            while ($r = mysqli_fetch_assoc($query_index)) {
+
+                echo  "<div class='col-4 p-4 pr_name_find pborder'>" ;
+                echo "<a href=showproduct.php?p_id=" . $r["p_id"] . ">";
+                echo  '<div class="pr">
+         <img src="./Uploaded_images/' . $r["p_featured_photo"] . '"alt="" width="200px" height="200px"> ';
+                echo   "<br><br><br>
+                <span class='p_name'>" . $r["p_name"] . "</span>";
+                echo  ' </div>';
+                echo "</a>";
+                echo  "</div>" ;
+        }
+
+       }else {
+       echo "there is not any products in this filed  !";
+       }
+    
+        ?>
         </div>
+
+      
+
+        
+        </div>
+        <?php include "./footer.php" ;?>
 
     <?php
     } else {
@@ -295,7 +342,7 @@ include "./header.php";
 
         <div class="slider1_p  p_slider">
             <h1 class="fetured_p">Fetured Produts</h1>
-            <span class="Fetured_product_slider">
+            <span class="Fetured_product_slider pr_name_find">
                 <?php
                 $query  = $mysqli->query("SELECT *  FROM  tbl_product ");
                 while ($r = mysqli_fetch_assoc($query)) {
@@ -315,7 +362,7 @@ include "./header.php";
         <br>
         <div class="slider1_p  p_slider">
             <h1 class="fetured_p">Latest Produts</h1>
-            <span class="Fetured_product_slider">
+            <span class="Fetured_product_slider pr_name_find">
                 <?php
                 $query  = $mysqli->query("SELECT *  FROM  tbl_product ORDER BY p_id DESC LIMIT 10");
                 while ($r = mysqli_fetch_assoc($query)) {
