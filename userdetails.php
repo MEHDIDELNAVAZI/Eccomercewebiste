@@ -3,7 +3,7 @@ include  "./config_database.php";
 session_start();
 if (
     isset($_SESSION['USER_ID']) &&
-  isset( $_SESSION['SESSION_EMAIL'])
+    isset($_SESSION['SESSION_EMAIL'])
 ) {
     include "./header.php";
 ?>
@@ -306,6 +306,7 @@ if (
                 width: 200px;
                 border-radius: 5px;
             }
+
             .div1,
             .div2 {
                 border: solid gray 1px;
@@ -315,6 +316,7 @@ if (
                 margin-top: 20px;
                 margin-left: 20px;
             }
+
             .button1 {
                 border-bottom: solid #EF4056 4px;
             }
@@ -784,12 +786,14 @@ if (
                                 <div class="col mt-3"> <span style="color: red;"> Password : </span>
 
                                     <?php
-                                    $str = " * * * * * * * *  * ";
+                                    $str = " * * * * * * * * * ";
                                     echo $str;
-                                    echo  "    <button   style='float: right;' type='button' class='btn btn-primary ml-3' data-toggle='modal' data-target='#editpassword'>
+                                    echo "<a href=http://shop.test/editpass.php>" ;
+                                    echo  "<button   style='float: right;' type='button' class='btn btn-primary ml-3'>
                                     <i class='bx bxs-edit-alt' style='font-size: 16px;' ></i>
                                         </button>
                                         ";
+                                        echo "</a>";
 
                                     ?>
 
@@ -822,7 +826,7 @@ if (
                                     }
 
 
-                                    ?>
+                                   ?>
                                 </div>
                                 <div class="w-100"></div>
                                 <div class="col  mt-3 pb-3"> <span style="color: red;"> Birthday : </span>
@@ -864,15 +868,6 @@ if (
                                     echo  "<span style='font-size:16px;padding:10px'>";
                                     echo   $email;
                                     echo  "</span>";
-                                    if (isset($_SESSION["verifycodeforeditemail"])) {
-                                        echo  "    <button  style='float: right;' type='button' class='btn btn-primary' data-toggle='modal' data-target='#verifyemail'>
-                                        <i class='bx bxs-edit-alt ' style='font-size: 16px;' ></i>
-                                            </button>  ";
-                                    } else {
-                                        echo  "  <button  style='float: right;' type='button' class='btn btn-primary' data-toggle='modal' data-target='#editemail'>
-                                        <i class='bx bxs-edit-alt ' style='font-size: 16px;' ></i>
-                                            </button>  ";
-                                    }
                                     ?>
                                 </div>
                             </div>
@@ -976,12 +971,6 @@ if (
                         </div>
 
 
-
-
-
-
-
-
                     <?php
                 } else if (isset($_GET["profile/recently_watched"])) {
                     ?>
@@ -1037,7 +1026,7 @@ if (
                 } else if (isset($_GET["profile/favorite"])) {
 
                     ?>
-                    
+
                         <div class="col-md-9  details   columnmargintop">
 
                             <div class="p-3 border bg-white" style="border-radius: 10px ">
@@ -1137,58 +1126,58 @@ if (
                                                 }
                                             } else {
                                             ?>
-                                             <div>
-                                            <br>
-                                            <br>
-                                            <img src="./images/order-empty.svg" alt="empty cart image  svg ">
-                                            <span style="font-size:17px;"> There is not any current  Order !
-                                            </span>
-                                        </div>
+                                                <div>
+                                                    <br>
+                                                    <br>
+                                                    <img src="./images/order-empty.svg" alt="empty cart image  svg ">
+                                                    <span style="font-size:17px;"> There is not any current Order !
+                                                    </span>
+                                                </div>
                                             <?php } ?>
-                                            
+
                                         </div>
                                     </div>
-                                    </div>
-                                    <div class="div2" style="display:none">
+                                </div>
+                                <div class="div2" style="display:none">
                                     <?php
-                                            $query = $mysqli->query("SELECT * FROM orders WHERE user_id='$_SESSION[USER_ID]' AND status='Completed' ");
-                                            if (mysqli_num_rows($query) > 0) {
-                                                while ($row = mysqli_fetch_assoc($query)) {
-                                                    $order_id = $row["order_id"];
-                                                    $query2 = $mysqli->query("SELECT * FROM order_product WHERE order_id ='$order_id'");
-                                                    while ($row2 = mysqli_fetch_assoc($query2)) {
-                                                        $p_id = $row2['p_id'];
-                                                        $query3 = $mysqli->query("SELECT * FROM tbl_product WHERE p_id='$p_id'");
-                                                        echo "<div class='row'>";
-                                                        while ($row3 = mysqli_fetch_assoc($query3)) {
-                                                            echo "<div class='col-3''>";
-                                                            echo "<div style='padding:20px'>";
-                                                            echo  "<a href=http://shop.test/showproduct.php?p_id=" . $p_id . ">";
-                                                            echo   "<img  width='100px' height='100px' src=./Uploaded_images/" . $row3["p_featured_photo"] . ">";
-                                                            echo "</a>";
-                                                            echo "<div style='width:200px'>";
-                                                            echo "<span style='font-size:16px;padding:10px'>" . $row3["p_name"]  . "</span>";
-                                                            echo "</div>";
-                                                            echo  "</div>";
-                                                            echo "</div>";
-                                                        }
-                                                    }
+                                    $query = $mysqli->query("SELECT * FROM orders WHERE user_id='$_SESSION[USER_ID]' AND status='Completed' ");
+                                    if (mysqli_num_rows($query) > 0) {
+                                        while ($row = mysqli_fetch_assoc($query)) {
+                                            $order_id = $row["order_id"];
+                                            $query2 = $mysqli->query("SELECT * FROM order_product WHERE order_id ='$order_id'");
+                                            while ($row2 = mysqli_fetch_assoc($query2)) {
+                                                $p_id = $row2['p_id'];
+                                                $query3 = $mysqli->query("SELECT * FROM tbl_product WHERE p_id='$p_id'");
+                                                echo "<div class='row'>";
+                                                while ($row3 = mysqli_fetch_assoc($query3)) {
+                                                    echo "<div class='col-3''>";
+                                                    echo "<div style='padding:20px'>";
+                                                    echo  "<a href=http://shop.test/showproduct.php?p_id=" . $p_id . ">";
+                                                    echo   "<img  width='100px' height='100px' src=./Uploaded_images/" . $row3["p_featured_photo"] . ">";
+                                                    echo "</a>";
+                                                    echo "<div style='width:200px'>";
+                                                    echo "<span style='font-size:16px;padding:10px'>" . $row3["p_name"]  . "</span>";
+                                                    echo "</div>";
+                                                    echo  "</div>";
+                                                    echo "</div>";
                                                 }
-                                            } else {
-                                                ?>
- <div>
+                                            }
+                                        }
+                                    } else {
+                                    ?>
+                                        <div>
                                             <br>
                                             <br>
                                             <img src="./images/order-empty.svg" alt="empty cart image  svg ">
-                                            <span style="font-size:17px;"> There is not any Compeleted  Order !
+                                            <span style="font-size:17px;"> There is not any Compeleted Order !
                                             </span>
                                         </div>
 
-                                            <?php 
-                                            }
-                                            ?>
+                                    <?php
+                                    }
+                                    ?>
 
-                                
+
                                 </div>
                             </div>
 
@@ -1867,9 +1856,10 @@ if (
                     </script>
                     <script>
                         $("#addaddressbtn").click(function() {
+                            
                             var addresline1 = $(".ad_l1").val().trim();
                             var addresline2 = $(".ad_l2").val().trim();
-                            var user_id = <?php echo  $_SESSION["id"]; ?>
+                            var user_id = <?php echo  $_SESSION["USER_ID"]; ?>
 
                             if (addresline1 != "" && addresline2 != "") {
                                 $.ajax({

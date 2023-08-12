@@ -96,7 +96,7 @@ if (isset($_POST['submit'])) {
                         </div>
                     </div>
                     <div class="content-wthree">
-                        <h2>Forgot Password</h2>
+                        <h2>change Password</h2>
                         <?php echo $msg; ?>
                         <form action="" method="post">
                             <input type="email" class="email" name="email" placeholder="Enter Your Email" required>

@@ -235,8 +235,6 @@ include "./header.php";
         border: solid 1px gray;
         }
      
-
-        
     </style>
 </head>
 
